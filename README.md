@@ -38,7 +38,7 @@ npm run build
 npm run test:unit
 ```
 
-### Development ###
+### Development Notes -- Cory Hanson ###
 
 Node 20 LTS
 Vue 3.4x
@@ -47,3 +47,25 @@ Configured to use: Vite, Pinia, and Vitest
 Using TypeScript.
 Adding SCSS pre-processor.
 
+
+The Plan:
+
+Form 
+- name
+- phone
+- interest: Mountains || Oceans || Deserts
+- description
+- travel (methods?): Car, Bus, Train
+
+Form States:
+Unsubmitted | Submitted
+
+Components:
+- TravelInterestForm
+  - FormInput
+  - FormTextArea
+  - FormSelect
+  - FormCheckBoxes
+
+Services:
+- formConfigService (Retrieve formConfig.json)

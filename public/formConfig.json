@@ -1,0 +1,77 @@
+{
+  "fields": [
+    {
+      "type": "text",
+      "name": "name",
+      "label": "Full Name",
+      "default": "",
+      "validation": {
+        "required": true,
+        "minLength": 2
+      },
+      "placeholder": "Enter your full name",
+      "errors": {
+        "minLength": "Name must be at least 2 characters"
+      }
+    },
+    {
+      "type": "tel",
+      "name": "phone",
+      "label": "Phone Number",
+      "default": "",
+      "validation": {
+        "required": true,
+        "type": "number"
+      },
+      "placeholder": "ex. 1234567890",
+      "errors": {
+        "type": "Phone must be a number"
+      }
+    },
+    {
+      "type": "select",
+      "name": "interest",
+      "label": "Area of Interest",
+      "options": ["Mountains", "Oceans", "Deserts"],
+      "default": "",
+      "validation": {
+        "required": true
+      },
+      "placeholder": "Select one focus interest"
+    },
+    {
+      "type": "textarea",
+      "name": "description",
+      "label": "Description",
+      "default": "",
+      "validation": {
+        "required": false,
+        "maxLength": 500
+      },
+      "placeholder": "Enter a brief description",
+      "errors": {
+        "maxLength": "Description must be less than 500 characters"
+      }
+    },
+    {
+      "type": "checkbox",
+      "name": "travel",
+      "label": "Travel Methods",
+      "options": ["Car", "Bus", "Train"],
+      "default": [],
+      "validation": {
+        "required": true
+      },
+      "placeholder": "Select all that apply",
+      "errors": {
+        "required": "At least one travel method must be selected"
+      }
+    }
+  ],
+  "submit": {
+    "label": "Submit",
+    "errors": {
+      "required": "All fields must be completed"
+    }
+  }
+}
