@@ -44,4 +44,6 @@ Node 20 LTS
 Vue 3.4x
 Configured to use: Vite, Pinia, and Vitest
 
+Using TypeScript.
+Adding SCSS pre-processor.
 
