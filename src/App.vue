@@ -4,11 +4,11 @@ import TravelInterestForm from './components/TravelInterestForm.vue';
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+    <img alt="Vue logo" class="logo" src="./assets/mapcompass.svg" width="125" height="125" />
 
-    <div class="wrapper">
+    <!-- <div class="wrapper">
       Header
-    </div>
+    </div> -->
   </header>
 
   <main>
@@ -24,23 +24,26 @@ header {
 .logo {
   display: block;
   margin: 0 auto 2rem;
+  /* Transition over .3 seconds size change */
+  transition: width 0.8s, height 0.8s;
 }
 
 @media (min-width: 1024px) {
   header {
-    display: flex;
+    /* display: flex;
     place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
+    padding-right: calc(var(--section-gap) / 2); */
   }
 
   .logo {
-    margin: 0 2rem 0 0;
+    width: 200px;
+    height: 200px;
   }
 
   header .wrapper {
-    display: flex;
+    /* display: flex;
     place-items: flex-start;
-    flex-wrap: wrap;
+    flex-wrap: wrap; */
   }
 }
 </style>
