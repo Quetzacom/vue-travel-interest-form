@@ -20,8 +20,7 @@ import { useFormStore } from '@/stores/useFormStore';
 export default defineComponent({
   setup() {
     const formStore = useFormStore();
-    formStore.loadConfig();
-
+ 
     const fieldInput = ref('');
     const fieldValue = computed(() => formStore.fieldValue);
 

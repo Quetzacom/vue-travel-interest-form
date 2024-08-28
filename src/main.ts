@@ -1,11 +1,14 @@
-import './assets/main.css'
+import './assets/main.css';
 
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-import App from './App.vue'
+import { createApp } from 'vue';
+import { createPinia } from 'pinia';
+import App from './App.vue';
+import { useFormStore } from './stores/useFormStore';
 
-const app = createApp(App)
+const app = createApp(App);
 
-app.use(createPinia())
+app.use(createPinia());
+const formStore = useFormStore();
+formStore.initializeStore();
 
-app.mount('#app')
+app.mount('#app');
