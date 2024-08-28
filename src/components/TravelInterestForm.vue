@@ -3,12 +3,26 @@
   <!-- Placeholder for form -->
   <h1>Travel Interest Form</h1>
 
-  <p>
+  <form action="" method="post">
+
+    <p>
     Field Value: {{ fieldValue }}
   </p>
 
   <input v-model="fieldInput" placeholder="Enter name" />
   <button @click="updateValue">Update</button>
+
+  </form>
+  
+  <div class="profile-card">
+    <ul>
+      <li v-for="(value, key) in fields" :key="key">
+        {{ key }}: {{ value }}
+      </li>
+    </ul>
+    
+  </div>
+
 </div>
 </template>
 
@@ -18,6 +32,7 @@ import { computed, defineComponent, ref } from 'vue';
 import { useFormStore } from '@/stores/useFormStore';
 
 export default defineComponent({
+  name: 'TravelInterestForm',
   setup() {
     const formStore = useFormStore();
  
@@ -29,6 +44,7 @@ export default defineComponent({
     };
 
     return {
+      fields: formStore.fields,
       fieldValue,
       fieldInput,
       updateValue,
@@ -37,3 +53,25 @@ export default defineComponent({
 });
 
 </script>
+
+<style lang="scss" scoped>
+
+.travel-interest-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 20px;
+}
+
+.profile-card {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+</style>
