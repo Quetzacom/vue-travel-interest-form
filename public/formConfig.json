@@ -4,7 +4,7 @@
       "type": "text",
       "name": "name",
       "label": "Full Name",
-      "default": "",
+      "defaultValue": "",
       "validation": {
         "required": true,
         "minLength": 2
@@ -18,7 +18,7 @@
       "type": "tel",
       "name": "phone",
       "label": "Phone Number",
-      "default": "",
+      "defaultValue": "",
       "validation": {
         "required": true,
         "type": "number"
@@ -33,7 +33,7 @@
       "name": "interest",
       "label": "Area of Interest",
       "options": ["Mountains", "Oceans", "Deserts"],
-      "default": "",
+      "defaultValue": "",
       "validation": {
         "required": true
       },
@@ -43,7 +43,7 @@
       "type": "textarea",
       "name": "description",
       "label": "Description",
-      "default": "",
+      "defaultValue": "",
       "validation": {
         "required": false,
         "maxLength": 500
@@ -58,7 +58,7 @@
       "name": "travel",
       "label": "Travel Methods",
       "options": ["Car", "Bus", "Train"],
-      "default": [],
+      "defaultValue": [],
       "validation": {
         "required": true
       },
