@@ -68,4 +68,7 @@ Components:
   - FormCheckBoxes
 
 Services:
-- formConfigService (Retrieve formConfig.json)
+- formConfigService -- Retrieve formConfig.json
+
+Store:
+- useFormStore -- based on formConfig
