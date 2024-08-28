@@ -7,11 +7,18 @@ export const useFormStore = defineStore('form', {
     fieldValue: 'TEST1'
   }),
   actions: {
-    
+    async loadConfig() {
+      try {
+        const config = await loadFormConfig();
+        console.log('Config: ', config);
+      } catch (error) {
+        console.error('Failed to load form config:', error);
+      }
+    },
     updateValue(field: string, value: string) {
       //(this as any)[field] = value;
       console.log('updateValue', field, value);
-      //this.fieldValue = value;
+
       //set fieldValue state
       this.fieldValue = value;
       
