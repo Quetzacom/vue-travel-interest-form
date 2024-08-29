@@ -23,7 +23,7 @@
         :name="field.name"
         :label="field.label"
         :placeholder="field.placeholder"
-        :default-value="field.defaultValue"
+        :options="field.options"
         @update:value="updateFieldValue"
         
       /> 
@@ -58,7 +58,8 @@ export default defineComponent({
       FormTextArea: defineAsyncComponent(() => import('@/components/common/FormTextArea.vue')),
       FormInput: defineAsyncComponent(() => import('@/components/common/FormInput.vue')),
       FormInfo: defineAsyncComponent(() => import('@/components/common/FormInfo.vue')),
-
+      FormSelect: defineAsyncComponent(() => import('@/components/common/FormSelect.vue')),
+      
       /* ADD NEW FORM ELEMENT COMPONENT IMPORTS HERE */
     };
 
@@ -67,9 +68,12 @@ export default defineComponent({
 
       switch (type) {
         case 'text':
+        case 'tel':
           return components.FormInput;
         case 'textarea':
           return components.FormTextArea;
+        case 'select':
+          return components.FormSelect;
         default:
         return components.FormInfo;
       }
@@ -124,25 +128,36 @@ export default defineComponent({
 
   form {
     width: 100%;
-  }
 
-  label {
-    display: block;
-    margin-bottom: 0.5rem;
-  }
+    > * {
+      margin-bottom: 1rem;
+    }
 
-  .field-input, .field-textarea {
-    width: 100%;
-    padding: 0.5rem;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
 
-  }
+    .field-input, .field-textarea, .field-select, .field-options {
+      width: 100%;
+      padding: 0.5rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      color: #666;
+      background-color: #fff;
 
-  .form-textarea {
-    resize: vertical;
+    }
+
+    .form-textarea {
+      resize: vertical;
+    }
   }
+}
+
+.warning {
+  color: rgb(255, 98, 0);
+  margin-top: 1rem;
 }
 
 </style>
