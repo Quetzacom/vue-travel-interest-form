@@ -18,6 +18,7 @@
       <component 
         v-for="field in formFields" 
         :is="getComponent(field.type)" 
+        :type="field.type"
         :key="field.name"
         :name="field.name"
         :label="field.label"
@@ -75,6 +76,7 @@ export default defineComponent({
     };
 
     const updateFieldValue = (name: string, value: any) => {
+      console.log(`Updating field ${name} with value: ${value}`);
       formStore.updateField(name, value);
     };
 
@@ -129,7 +131,7 @@ export default defineComponent({
     margin-bottom: 0.5rem;
   }
 
-  .form-input, .form-textarea {
+  .field-input, .field-textarea {
     width: 100%;
     padding: 0.5rem;
     font-size: 1rem;

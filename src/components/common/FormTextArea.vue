@@ -1,7 +1,14 @@
 <template>
   <div>
     <label :for="name">{{ label }}</label>
-    <textarea class="form-textarea" :name="name" :placeholder="placeholder" v-model="localValue"></textarea>
+    <textarea 
+      class="field-textarea" 
+      :name="name" 
+      :placeholder="placeholder" 
+      v-model="localValue"
+      @input="handleInput"
+    >
+    </textarea>
   </div>
 </template>
 
@@ -11,6 +18,10 @@ import { defineComponent, ref, watch } from 'vue';
 export default defineComponent({
   name: 'FormTextArea',
   props: {
+    type: {
+      type: String,
+      required: true
+    },
     name: {
       type: String,
       required: true
@@ -18,10 +29,6 @@ export default defineComponent({
     label: {
       type: String,
       required: true
-    },
-    defaultValue: {
-      type: String,
-      default: ''
     },
     value: {
       type: String,
@@ -33,12 +40,12 @@ export default defineComponent({
     }
   },
   setup(props, { emit }) {
-    const localValue = ref(props.defaultValue);
+    const localValue = ref(props.value);
 
-    const updateValue = (event: Event) => {
-      const target = event.target as HTMLInputElement;
-      localValue.value = target.value;
-      emit('update:value', props.name, localValue.value);
+    const handleInput = (event: Event) => {
+      const input = event.target as HTMLTextAreaElement;
+      localValue.value = input.value;
+      emit('update:value', props.name, input.value);
     };
 
     watch(localValue, (newValue) => {
@@ -48,12 +55,9 @@ export default defineComponent({
     });
 
     return {
+      handleInput,
       localValue
     };
   }
 });
 </script>
-
-<style scoped>
-
-</style>

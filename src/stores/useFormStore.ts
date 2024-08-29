@@ -28,7 +28,6 @@ interface FormConfig {
 
 export const useFormStore = defineStore('form', {
   state: () => ({
-    // TODO: Define state for form fields -- build this from the config.
     name: 'useFormStore',
     config: null as FormConfig | null,
     formData: {} as Record<string, any>,
@@ -70,6 +69,7 @@ export const useFormStore = defineStore('form', {
     updateField(field: string, value: any) {
       console.log(`${this.name} is updating field ${field} with value: ${value}`);
       this.formData[field] = value;
+      // @@TODO Call Validation Here
     },
     setValidationError(field: string, error: any) {
       console.log(`${this.name} is setting validation error for ${field}: ${error}`);

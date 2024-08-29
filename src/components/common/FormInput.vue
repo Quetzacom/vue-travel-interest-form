@@ -1,16 +1,27 @@
 <template>
-  <div>
+  <div class="form-input-element">
     <label :for="name">{{ label }}</label>
-    <input class="form-input" :name="name" :placeholder="placeholder" v-model="value" />
+    <input 
+      class="field-input" 
+      :type="type"
+      :name="name" 
+      :placeholder="placeholder" 
+      v-model="localValue" 
+      @input="handleInput"
+    />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, watch } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
 
 export default defineComponent({
   name: 'FormInput',
   props: {
+    type: {
+      type: String,
+      required: true
+    },
     name: {
       type: String,
       required: true
@@ -23,36 +34,30 @@ export default defineComponent({
       type: String,
       default: ''
     },
-    defaultValue: {
-      type: null,
-      //type: String,
-      default: ''
-    },
     placeholder: {
       type: String,
       default: ''
     }
   },
-  setup(props) {
-    watch(() => props.defaultValue, (newValue) => {
-      // Emit the updated value to the parent component
-      // This can be used to update the form store or any other state management
+  setup(props, { emit }) {
+    const localValue = ref(props.value);
 
-      
+    const handleInput = (event: Event) => {
+      const input = event.target as HTMLInputElement;
+      localValue.value = input.value;
+      emit('update:value', props.name, input.value);
+    };
+
+    /* watch(() => props.defaultValue, (newValue) => {
+      value.value = newValue;
+      emit('update:value', props.name, newValue);
       console.log(`Updated value for ${props.name}: ${newValue}`);
-    });
+    }); */
     return {
-      value: props.value
+      handleInput,
+      localValue
     };
   }
 });
 
-
-
-
 </script>
-
-<style scoped>
-
-
-</style>
