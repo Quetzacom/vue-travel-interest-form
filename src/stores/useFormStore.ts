@@ -29,9 +29,12 @@ interface FormConfig {
 export const useFormStore = defineStore('form', {
   state: () => ({
     // TODO: Define state for form fields -- build this from the config.
-    fieldValue: 'TEST1',
+    name: 'useFormStore',
     config: null as FormConfig | null,
-    fields: {} as Record<string, any>
+    formData: {} as Record<string, any>,
+    //string | number | string[] | number[] | null
+    validationErrors: {} as Record<string, string[]>,
+    isSubmitted: false
   }),
   actions: {
     async initializeStore() {
@@ -40,28 +43,57 @@ export const useFormStore = defineStore('form', {
       if (this.config && this.config.fields) {
         this.config.fields.forEach((field: FieldConfig) => {
           //Declaring a new field in store based on config
-          this.fields[field.name] = field.defaultValue;
+          console.log('Field: ', field);
+          this.formData[field.name] = field.defaultValue;
+
         });
+        console.log("Fields: ", this.formData);
+        console.log('Form Store is ready');
+      } else {
+        console.error('Failed to initialize form store');
+        //try one more time in 5 seconds
+        setTimeout(() => {
+          this.initializeStore();
+        }, 5000);
       }
-      console.log("Fields: ", this.fields);
-      console.log('Form Store is ready');
+      
     },
     async loadConfig() {
       try {
-        const config = await loadFormConfig();
-        this.config = config;
-        console.log('Config: ', config);
+        this.config = await loadFormConfig();
+        console.log('Config: ', this.config);
       } catch (error) {
+        this.config = null;
         console.error('Failed to load form config:', error);
       }
     },
-    updateValue(field: string, value: string) {
-      //(this as any)[field] = value;
-      console.log('updateValue', field, value);
+    updateField(field: string, value: any) {
+      console.log(`${this.name} is updating field ${field} with value: ${value}`);
+      this.formData[field] = value;
+    },
+    setValidationError(field: string, error: any) {
+      console.log(`${this.name} is setting validation error for ${field}: ${error}`);
+      this.validationErrors[field] = [...this.validationErrors[field], error];
 
-      //set fieldValue state
-      this.fieldValue = value;
-      
+      //this.validationErrors[field].push(error);
+    },
+    clearValidationErrors() {
+      console.log(`${this.name} is clearing validation errors`);
+      this.validationErrors = {};
+    },
+    submitForm() {
+      console.log(`${this.name} is submitting form`);
+      //Write code to submit form data saving to the formData
+      console.log('Form Data: ', this.formData);
+
+      //Reset the form
+      //this.formData = {};
+
+      //Set the submitted flag
+      this.isSubmitted = true;
+
+      //Clear the validation errors
+      this.clearValidationErrors();
     }
   }
 });

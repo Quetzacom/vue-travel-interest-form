@@ -69,7 +69,7 @@
     }
   ],
   "submit": {
-    "label": "Submit",
+    "label": "Send",
     "errors": {
       "required": "All fields must be completed"
     }
