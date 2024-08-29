@@ -33,7 +33,7 @@
       "name": "interest",
       "label": "Area of Interest",
       "options": ["Mountains", "Oceans", "Deserts"],
-      "defaultValue": "",
+      "defaultValue": "-1",
       "validation": {
         "required": true
       },

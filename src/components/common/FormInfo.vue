@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="form-info-element">
     <p class="warning">DEV WARNING: A component was expected but not found for "{{ name }}" of type "{{ type }}"</p>
   </div>
 </template>

@@ -1,45 +1,53 @@
-<!-- <template>
-  <div class="form-input-element">
-    <label :for="name">{{ label }}</label>
-    <select 
-      class="field-select" 
-      :name="name" 
-      v-model="localValue" 
-      @input="handleInput"
-    >
-      <option value="" disabled>{{ placeholder }}</option>
-      <option v-for="option in options" :value="option">{{ option }}</option>
-    </select>
-  </div>
-</template> -->
-
-
 <!-- Custom Drop Down Menu -->
 <template>
-  <div class="custom-select">
-    <label :for="name">{{ label }}</label>
-    <div class="select-container" @click="toggleDropdown">
-      <div class="field-select selected-option">
-        <component class="option-icon" :is="getIcon(selectedOption)" />
-        {{ selectedOption || placeholder }}</div>
-      <div class="dropdown" v-if="isOpen">
-        <div 
-          v-for="option in options" 
-          :key="option" 
-          class="field-select dropdown-option" 
-          @click="selectOption(option)"
-        >
-          <component class="option-icon" :is="getIcon(option)" />
-          {{ option }}
-        </div>
-      </div>
+  <div class="form-select-element">
+    <label :for="name" :id="`${name}-label`">{{ label }}</label>
+    <button
+      class="select-container field-select"
+      @click="toggleDropdown"
+      @keydown="handleKeyPress"
+      :aria-expanded="isOpen.toString()"
+      role="combobox"
+      aria-haspopup="listbox"
+      :aria-labelledby="`${name}-label`"
+      :aria-controls="`${name}-listbox`"
+      tabindex="0"
+    >
+      <component class="option-icon" :is="getIcon(selectedOption)" />
+      <span>{{ selectedOption || placeholder }}</span>
+    </button>
+    <ul
+      v-if="isOpen"
+      class="dropdown"
+      role="listbox"
+      :id="`${name}-listbox`"
+      :aria-labelledby="`${name}-label`"
+      @keydown="handleKeyPress"
+      tabindex="-1"
+    >
+      <li
+        v-for="(option, index) in options"
+        :key="option"
+        class="dropdown-option"
+        @click="selectOption(option)"
+        @blur="handleBlur"
+        role="option"
+        :aria-selected="option === selectedOption"
+        :tabindex="index === focusedIndex.value ? '0' : '-1'"
+        @focus="focusedIndex = index"
+        @mousedown.prevent="focusedIndex = index"
+      >
+        <component class="option-icon" :is="getIcon(option)" />
+        <span>{{ option }}</span>
+      </li>
+    </ul>
     </div>
-  </div>
+  
 </template>
 
 <script lang="ts">
 
-import { defineComponent, ref, watch } from 'vue';
+import { defineComponent, onBeforeUnmount, onMounted, ref } from 'vue';
 import IconCircle from '../icons/IconCircle.vue';
 import IconMountains from '../icons/IconMountains.vue';
 import IconDeserts from '../icons/IconDeserts.vue';
@@ -82,7 +90,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const isOpen = ref(false);
     const selectedOption = ref(props.value);
-    const localValue = ref(props.value);
+    const focusedIndex = ref(-1);
 
     const getIcon = (option: string) => {
       switch (option) {
@@ -99,27 +107,110 @@ export default defineComponent({
 
     const toggleDropdown = () => {
       isOpen.value = !isOpen.value;
+      if (isOpen.value) {
+        focusedIndex.value = 0;
+        updateFocusedOption();
+      }
     };
 
     const selectOption = (option: string) => {
       selectedOption.value = option;
-      emit('update:value', option);
+      emit('update:value', props.name, selectedOption.value);
+      isOpen.value = false;
     };
 
-    const handleInput = (event: Event) => {
-      const input = event.target as HTMLSelectElement;
-      localValue.value = input.value;
-      emit('update:value', props.name, input.value);
+    const handleKeyPress = (event: KeyboardEvent) => {
+      
+      if (!isOpen.value) {
+        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+          event.preventDefault();
+          toggleDropdown();
+        }
+        focusedIndex.value = 0;
+        updateFocusedOption();
+        return;
+      }
+
+      console.log(event.key);
+      console.log("FI-in", focusedIndex.value);
+      switch (event.key) {
+        case 'ArrowDown':
+          event.preventDefault();
+          focusedIndex.value = (focusedIndex.value + 1) % props.options.length;
+         
+          console.log("FFF", focusedIndex.value);
+          break;
+        case 'ArrowUp':
+          event.preventDefault();
+          focusedIndex.value = (focusedIndex.value - 1 + props.options.length) % props.options.length;
+          console.log("FFF++", focusedIndex.value);
+          break;
+        case 'Enter':
+        case ' ':
+          event.preventDefault();
+          if (focusedIndex.value >= 0) {
+            selectOption(props.options[focusedIndex.value]);
+          }
+          break;
+        case 'Escape':
+          isOpen.value = false;
+          focusedIndex.value = -1;
+          break;
+        case 'Tab':
+          isOpen.value = false;
+          break;
+        default:
+          break;
+      }
+      console.log(focusedIndex.value);
+      updateFocusedOption();
     };
+
+    const updateFocusedOption = () => {
+      // Update focus after arrow key press
+      if (isOpen.value && focusedIndex.value >= 0) {
+        const dropdown = document.getElementById(`${props.name}-listbox`);
+        if (dropdown) {
+          const options = dropdown.querySelectorAll<HTMLElement>('[role="option"]');
+          options[focusedIndex.value]?.focus();
+        }
+      }
+
+    };
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!isOpen.value) return;
+      const target = event.target as HTMLElement;
+      if (!target.closest('.form-select-element')) {
+        isOpen.value = false;
+      }
+    };
+
+    const handleBlur = () => {
+      setTimeout(() => {
+        if (!document.activeElement?.closest('.form-select-element')) {
+          isOpen.value = false;
+        }
+      }, 0);
+    };
+
+    onMounted(() => {
+      document.addEventListener('click', handleClickOutside);
+    });
+
+    onBeforeUnmount(() => {
+      document.removeEventListener('click', handleClickOutside);
+    });
 
     return {
       isOpen,
       selectedOption,
+      focusedIndex,
       toggleDropdown,
       selectOption,
       getIcon,
-      handleInput,
-      localValue
+      handleKeyPress,
+      handleBlur,
     };
   }
 });
@@ -127,42 +218,48 @@ export default defineComponent({
 
 
 <style lang="scss" scoped>
-.custom-select {
+
+span {
+  display: inline-block;
+  line-height: 1rem;
+  height: 1rem;
+}
+
+.form-select-element {
   position: relative;
-  width: 100%;
   
   .select-container {
-
-    
     cursor: pointer;
     user-select: none;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+  }
 
-    .select-option {
-      padding: 8px;
-    }
+  .dropdown {
+    position: absolute;
+    top: 100%;
+    width: 100%;
+    z-index: 1;
+    background-color: #333;
+    border: 1px solid #333333;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 
-    .dropdown {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      border: 1px solid #000000;
-      border-radius: 4px;
-      background-color: #eee;
-      z-index: 1000;
+    .dropdown-option {
+      width: calc(100% - 4px);
+      margin-left: 2px;
+      display: flex;
+      align-items: center;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      color: #666;
+      background-color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
 
-      .dropdown-option {
-        padding: 8px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        
-        &:hover {
-          background-color: #bfbfbf;
-        }
+      &:hover, &:focus {
+        background-color: #bfbfbf;
+        outline: none;
       }
     }
   }
@@ -172,7 +269,8 @@ export default defineComponent({
   margin-right: 16px;
   margin-left: 16px;
   min-width: 20px;
-  height: 20px;
+  
+  margin-bottom: 0;
   
 }
 </style>

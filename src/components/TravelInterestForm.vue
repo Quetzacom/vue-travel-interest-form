@@ -28,10 +28,11 @@
         
       /> 
       <!-- v-model="formData[field.name]" -->
-    <button type="submit">{{ formConfig?.label || 'Submit' }}</button>
+    <button class="button" type="submit">{{ formConfig?.label || 'Submit' }}</button>
   </form>
   
   <div class="profile-card">
+
     <ul>
       <li v-for="(value, key) in formData" :key="key">
         {{ key }}: {{ value }}
@@ -59,7 +60,7 @@ export default defineComponent({
       FormInput: defineAsyncComponent(() => import('@/components/common/FormInput.vue')),
       FormInfo: defineAsyncComponent(() => import('@/components/common/FormInfo.vue')),
       FormSelect: defineAsyncComponent(() => import('@/components/common/FormSelect.vue')),
-      
+      FormCheckBoxes: defineAsyncComponent(() => import('@/components/common/FormCheckBoxes.vue')),
       /* ADD NEW FORM ELEMENT COMPONENT IMPORTS HERE */
     };
 
@@ -74,6 +75,8 @@ export default defineComponent({
           return components.FormTextArea;
         case 'select':
           return components.FormSelect;
+        case 'checkbox':
+          return components.FormCheckBoxes;
         default:
         return components.FormInfo;
       }
@@ -108,6 +111,14 @@ export default defineComponent({
 
 <style lang="scss">
 
+/* Reset list item styles */
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+
+}
+
 .travel-interest-form {
   display: flex;
   flex-direction: column;
@@ -138,7 +149,7 @@ export default defineComponent({
       margin-bottom: 0.5rem;
     }
 
-    .field-input, .field-textarea, .field-select, .field-options {
+    .field-input, .field-textarea, .field-select {
       width: 100%;
       padding: 0.5rem;
       font-size: 1rem;
@@ -151,6 +162,16 @@ export default defineComponent({
 
     .form-textarea {
       resize: vertical;
+    }
+
+    .button {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
     }
   }
 }
