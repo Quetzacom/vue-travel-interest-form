@@ -29,7 +29,6 @@
           @update:value="updateFieldValue"
           
         /> 
-        <!-- v-model="formData[field.name]" -->
       <button :disabled="!isReadyToSubmit" class="button" type="submit">{{ formConfig?.label || 'Submit' }}</button>
     </form>
   </template>
@@ -49,7 +48,7 @@
 
 <script lang="ts">
 
-import { computed, defineComponent, ref, defineAsyncComponent } from 'vue';
+import { computed, defineComponent, defineAsyncComponent } from 'vue';
 import { useFormStore } from '@/stores/useFormStore';
 
 export default defineComponent({
@@ -61,8 +60,6 @@ export default defineComponent({
     const formData = computed(() => formStore.formData);
     const isReadyToSubmit =computed(() => formStore.isReadyToSubmit);
     const isSubmitted = computed(() => formStore.isSubmitted);
-  
-
 
     const components = {
       FormTextArea: defineAsyncComponent(() => import('@/components/common/FormTextArea.vue')),
@@ -137,13 +134,16 @@ ul {
   border: 1px solid #ccc;
   border-radius: 5px;
   margin: 20px;
+  min-width: 400px;
 
   .profile-card {
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 20px;
     margin-top: 20px;
-    min-width: 300px;
+    width: 80%;
+    min-width: 400px;
+    max-width: 90%;
   }
 
   form {

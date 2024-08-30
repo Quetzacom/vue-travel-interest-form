@@ -5,10 +5,6 @@ import TravelInterestForm from './components/TravelInterestForm.vue';
 <template>
   <header>
     <img alt="Vue logo" class="logo" src="./assets/mapcompass.svg" width="125" height="125" />
-
-    <!-- <div class="wrapper">
-      Header
-    </div> -->
   </header>
 
   <main>
@@ -32,18 +28,12 @@ header {
   header {
     /* display: flex;
     place-items: center;
-    padding-right: calc(var(--section-gap) / 2); */
+   */
   }
 
   .logo {
     width: 200px;
     height: 200px;
-  }
-
-  header .wrapper {
-    /* display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap; */
   }
 }
 </style>
