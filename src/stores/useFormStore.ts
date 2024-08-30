@@ -9,7 +9,7 @@ interface ValidationConfig {
 }
 interface FieldConfig {
   name: string;
-  defaultValue: string | number | string[] | number[] | null;
+  defaultValue: any;
   type: string;
   label: string;
   options?: string[];
@@ -31,8 +31,8 @@ export const useFormStore = defineStore('form', {
     name: 'useFormStore',
     config: null as FormConfig | null,
     formData: {} as Record<string, any>,
-    //string | number | string[] | number[] | null
     validationErrors: {} as Record<string, string[]>,
+    isReadyToSubmit: false,
     isSubmitted: false
   }),
   actions: {
@@ -42,12 +42,14 @@ export const useFormStore = defineStore('form', {
       if (this.config && this.config.fields) {
         this.config.fields.forEach((field: FieldConfig) => {
           //Declaring a new field in store based on config
-          console.log('Field: ', field);
+          //console.log('Field: ', field);
           this.formData[field.name] = field.defaultValue;
 
         });
-        console.log("Fields: ", this.formData);
-        console.log('Form Store is ready');
+        this.isReadyToSubmit = false; //Form is not ready to submit on start
+        this.validateAllFields();
+
+        console.log('%cForm Store is ready', "background-color: green; color: white;");
       } else {
         console.error('Failed to initialize form store');
         //try one more time in 5 seconds
@@ -58,42 +60,82 @@ export const useFormStore = defineStore('form', {
       
     },
     async loadConfig() {
-      try {
-        this.config = await loadFormConfig();
-        console.log('Config: ', this.config);
-      } catch (error) {
-        this.config = null;
-        console.error('Failed to load form config:', error);
-      }
+      this.config = await loadFormConfig();
     },
     updateField(field: string, value: any) {
-      console.log(`${this.name} is updating field ${field} with value: ${value}`);
+      //console.log(`${this.name} is updating field ${field} with value: ${value}`);
       this.formData[field] = value;
-      // @@TODO Call Validation Here
+      this.validateField(field);
+      this.checkIfFormIsReady();
     },
+
+    validateField(field: string) {
+      //console.log(`${this.name} is validating field ${field}`);
+      const value = this.formData[field];
+      const fieldConfig = this.config?.fields.find((f) => f.name === field);
+      if (!fieldConfig) {
+        console.error(`Field config not found for ${field}`);
+        return;
+      }
+      const validation = fieldConfig.validation;
+      const errors: string[] = [];
+      if (validation.required && (value.toString().trim().length === 0)) {
+        errors.push('Required');
+      }
+      if (validation.minLength && value && value.length < validation.minLength) {
+        errors.push('MinLength');
+      }
+      if (validation.maxLength && value && value.length > validation.maxLength) {
+        errors.push('MaxLength');
+      }
+
+      if (errors.length > 0) {
+        this.setValidationError(field, errors.join(','));
+      } else {
+        this.clearValidationError(field);
+      }
+    },
+
+    validateAllFields() {
+      if (this.config && this.config.fields) {
+        this.config.fields.forEach((field: FieldConfig) => {
+          this.validateField(field.name);
+        });
+      }
+      this.checkIfFormIsReady();
+    },
+
     setValidationError(field: string, error: any) {
-      console.log(`${this.name} is setting validation error for ${field}: ${error}`);
-      this.validationErrors[field] = [...this.validationErrors[field], error];
-
-      //this.validationErrors[field].push(error);
+      //console.log(`${this.name} is setting validation error for ${field}: ${error}`);
+      this.validationErrors[field] = [...(this.validationErrors[field] || []), error];
+      this.isReadyToSubmit = false;
     },
+
+    clearValidationError(field: string) {
+      //console.log(`${this.name} is clearing validation error for ${field}`);
+      delete this.validationErrors[field];
+    },
+
     clearValidationErrors() {
-      console.log(`${this.name} is clearing validation errors`);
       this.validationErrors = {};
+      this.isReadyToSubmit = true;
     },
+
+    checkIfFormIsReady() {
+      this.isReadyToSubmit = Object.keys(this.validationErrors).length === 0;
+    },
+
     submitForm() {
+      //Mock Submit
       console.log(`${this.name} is submitting form`);
-      //Write code to submit form data saving to the formData
       console.log('Form Data: ', this.formData);
-
-      //Reset the form
-      //this.formData = {};
-
+      if (!this.isReadyToSubmit) {
+        console.error('Form is not ready to submit');
+        return;
+      }
       //Set the submitted flag
       this.isSubmitted = true;
-
-      //Clear the validation errors
-      this.clearValidationErrors();
+ 
     }
   }
 });

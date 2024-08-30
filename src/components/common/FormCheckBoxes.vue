@@ -1,5 +1,6 @@
 <template>
   <div class="field-checkboxes-element">
+    <ValidationMessage :validation="validation" :errors="errors" :localValue="selectedOptions" />
     <label class="label">{{ label }}</label>
     <div class="checkbox-container">
       <div class="checkbox-item" v-for="option in options" :key="option">
@@ -12,9 +13,13 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import ValidationMessage from '@/components/common/ValidationMessage.vue';
 
 export default defineComponent({
   name: 'FormCheckBoxes',
+  components: {
+    ValidationMessage
+  },
   props: {
     type: {
       type: String,
@@ -29,7 +34,7 @@ export default defineComponent({
       required: true
     },
     value: {
-      type: String,
+      type: Array as () => string[],
       default: () => []
     },
     placeholder: {
@@ -40,11 +45,19 @@ export default defineComponent({
       type: Array as () => string[],
       required: true
     },
+    validation: {
+      type: Object,
+      default: () => ({})
+    },
+    errors: {
+      type: Object,
+      default: () => ({})
+    }
   },
   setup(props, { emit }) {
     const selectedOptions = ref(props.value);
 
-    const handleChange = () => {
+    const handleChange = () => {      
       emit('update:value', props.name, selectedOptions.value);
     };
 

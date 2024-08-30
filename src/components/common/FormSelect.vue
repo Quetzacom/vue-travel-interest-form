@@ -1,8 +1,11 @@
 <!-- Custom Drop Down Menu -->
 <template>
   <div class="form-select-element">
+    <ValidationMessage :validation="validation" :errors="errors" :localValue="selectedOption" />
+
     <label :for="name" :id="`${name}-label`">{{ label }}</label>
     <button
+      type="button"
       class="select-container field-select"
       @click="toggleDropdown"
       @keydown="handleKeyPress"
@@ -48,10 +51,11 @@
 <script lang="ts">
 
 import { defineComponent, onBeforeUnmount, onMounted, ref } from 'vue';
-import IconCircle from '../icons/IconCircle.vue';
-import IconMountains from '../icons/IconMountains.vue';
-import IconDeserts from '../icons/IconDeserts.vue';
-import IconOceans from '../icons/IconOceans.vue';
+import ValidationMessage from '@/components/common/ValidationMessage.vue';
+import IconCircle from '@/components/icons/IconCircle.vue';
+import IconMountains from '@/components/icons/IconMountains.vue';
+import IconDeserts from '@/components/icons/IconDeserts.vue';
+import IconOceans from '@/components/icons/IconOceans.vue';
 
 export default defineComponent({
   name: 'FormSelect',
@@ -59,7 +63,8 @@ export default defineComponent({
     IconCircle,
     IconMountains,
     IconDeserts,
-    IconOceans
+    IconOceans,
+    ValidationMessage
   },
   props: {
     type: {
@@ -85,6 +90,14 @@ export default defineComponent({
     options: {
       type: Array as () => string[],
       required: true
+    },
+    validation: {
+      type: Object,
+      default: () => ({})
+    },
+    errors: {
+      type: Object,
+      default: () => ({})
     }
   },
   setup(props, { emit }) {

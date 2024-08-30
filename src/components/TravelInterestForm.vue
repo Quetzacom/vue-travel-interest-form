@@ -13,26 +13,31 @@
 <div class="travel-interest-form">
   <!-- Placeholder for form -->
   <h1>Travel Interest Form</h1>
-
-  <form @submit.prevent="handleSubmit">
-      <component 
-        v-for="field in formFields" 
-        :is="getComponent(field.type)" 
-        :type="field.type"
-        :key="field.name"
-        :name="field.name"
-        :label="field.label"
-        :placeholder="field.placeholder"
-        :options="field.options"
-        @update:value="updateFieldValue"
-        
-      /> 
-      <!-- v-model="formData[field.name]" -->
-    <button class="button" type="submit">{{ formConfig?.label || 'Submit' }}</button>
-  </form>
-  
+  <template v-if="!isSubmitted">
+    <form @submit.prevent="handleSubmit">
+        <component 
+          v-for="field in formFields" 
+          :is="getComponent(field.type)" 
+          :type="field.type"
+          :key="field.name"
+          :name="field.name"
+          :label="field.label"
+          :placeholder="field.placeholder"
+          :options="field.options"
+          :validation="field.validation"
+          :errors="field.errors"
+          @update:value="updateFieldValue"
+          
+        /> 
+        <!-- v-model="formData[field.name]" -->
+      <button :disabled="!isReadyToSubmit" class="button" type="submit">{{ formConfig?.label || 'Submit' }}</button>
+    </form>
+  </template>
+  <div v-if="isSubmitted">
+    <h2>has been submitted successfully!</h2>
+  </div>
   <div class="profile-card">
-
+    <h3>Draft Profile Data</h3>
     <ul>
       <li v-for="(value, key) in formData" :key="key">
         {{ key }}: {{ value }}
@@ -54,6 +59,10 @@ export default defineComponent({
     const formConfig = computed(() => formStore.config?.submit);
     const formFields = computed(() => formStore.config?.fields);
     const formData = computed(() => formStore.formData);
+    const isReadyToSubmit =computed(() => formStore.isReadyToSubmit);
+    const isSubmitted = computed(() => formStore.isSubmitted);
+  
+
 
     const components = {
       FormTextArea: defineAsyncComponent(() => import('@/components/common/FormTextArea.vue')),
@@ -70,6 +79,7 @@ export default defineComponent({
       switch (type) {
         case 'text':
         case 'tel':
+        case 'number':
           return components.FormInput;
         case 'textarea':
           return components.FormTextArea;
@@ -83,16 +93,13 @@ export default defineComponent({
     };
 
     const updateFieldValue = (name: string, value: any) => {
-      console.log(`Updating field ${name} with value: ${value}`);
+      //console.log(`Updating field ${name} with value: ${value}`);
       formStore.updateField(name, value);
     };
 
     const handleSubmit = () => {
       console.log('Form submitted');
       formStore.submitForm();
-      if (formStore.isSubmitted) {
-        // Handle form submission logic
-      }
     };
 
     return {
@@ -102,7 +109,9 @@ export default defineComponent({
       components,
       getComponent,
       updateFieldValue,
-      handleSubmit
+      isReadyToSubmit,
+      handleSubmit,
+      isSubmitted
     };
   },
 });
@@ -144,6 +153,10 @@ ul {
       margin-bottom: 1rem;
     }
 
+    > div {
+      position: relative;
+    }
+
     label {
       display: block;
       margin-bottom: 0.5rem;
@@ -172,6 +185,16 @@ ul {
       background-color: #007bff;
       color: #fff;
       cursor: pointer;
+
+      &:hover {
+        background-color: #0056b3;
+      }
+
+      &:disabled {
+        background-color: #ccc;
+        color: #666;
+        cursor: not-allowed;
+      }
     }
   }
 }

@@ -1,5 +1,6 @@
 <template>
   <div class="form-input-element">
+    <ValidationMessage :validation="validation" :errors="errors" :localValue="localValue" />
     <label :for="name">{{ label }}</label>
     <input 
       class="field-input" 
@@ -9,14 +10,19 @@
       v-model="localValue" 
       @input="handleInput"
     />
+    
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue';
+import ValidationMessage from '@/components/common/ValidationMessage.vue';
 
 export default defineComponent({
   name: 'FormInput',
+  components: {
+    ValidationMessage
+  },
   props: {
     type: {
       type: String,
@@ -37,6 +43,14 @@ export default defineComponent({
     placeholder: {
       type: String,
       default: ''
+    },
+    validation: {
+      type: Object,
+      default: () => ({})
+    },
+    errors: {
+      type: Object,
+      default: () => ({})
     }
   },
   setup(props, { emit }) {
@@ -48,11 +62,12 @@ export default defineComponent({
       emit('update:value', props.name, input.value);
     };
 
-    /* watch(() => props.defaultValue, (newValue) => {
-      value.value = newValue;
-      emit('update:value', props.name, newValue);
-      console.log(`Updated value for ${props.name}: ${newValue}`);
-    }); */
+    watch(localValue, (newValue) => {
+      if (props.type === 'number' || props.type === 'tel') {
+        // Remove any non-numeric characters
+        localValue.value = newValue.replace(/\D/g, '');
+      }
+    });
     return {
       handleInput,
       localValue
@@ -61,3 +76,7 @@ export default defineComponent({
 });
 
 </script>
+
+<style scoped lang="scss">
+
+</style>

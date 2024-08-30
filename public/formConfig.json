@@ -7,7 +7,7 @@
       "defaultValue": "",
       "validation": {
         "required": true,
-        "minLength": 2
+        "minLength": 3
       },
       "placeholder": "Enter your full name",
       "errors": {
@@ -21,11 +21,11 @@
       "defaultValue": "",
       "validation": {
         "required": true,
-        "type": "number"
+        "number": true
       },
       "placeholder": "ex. 1234567890",
       "errors": {
-        "type": "Phone must be a number"
+        "number": "Phone must be a number"
       }
     },
     {
@@ -33,7 +33,7 @@
       "name": "interest",
       "label": "Area of Interest",
       "options": ["Mountains", "Oceans", "Deserts"],
-      "defaultValue": "-1",
+      "defaultValue": "",
       "validation": {
         "required": true
       },
