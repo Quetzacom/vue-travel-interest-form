@@ -1,3 +1,61 @@
+### Development Notes -- Cory Hanson ###
+20240829
+
+Node 20 LTS
+Vue 3.4x
+Configured to use: Vite, Pinia, and Vitest
+
+Using TypeScript.
+Adding SCSS pre-processor.
+
+
+The Plan:
+
+Form 
+- name
+- phone
+- interest: Mountains || Oceans || Deserts
+- description
+- travel (methods?): Car, Bus, Train
+
+Form States:
+Unsubmitted | Submitted
+
+
+# Components:
+- TravelInterestForm
+  - **FormInput** - used for text, tel, number input forms
+  - **FormTextArea** - textArea
+  - **FormSelect** - Custom Dropdown (I should have just done a regular one)
+  - **FormCheckBoxes** - checkbox group
+  - **FormInfo** - placeholder for unsupported configs
+
+  - **ValidationMessage** - common subcomponent to form element components
+
+  - **Icon Components:** 
+    -- IconCircle
+    -- IconDeserts
+    -- IconMountains
+    -- IconOceans
+      (Used on FormSelect Dropdown List)
+
+
+# Services:
+- **formConfigService** -- Retrieve formConfig.json
+
+# Store:
+- **useFormStore** -- based on formConfig
+  - form config data
+  - form data
+  - validation data
+  - isReadyToSubmit state
+  - isSubmitted state
+
+# Config File:
+**public/formConfig.json**
+
+
+
 # vue-travel-interest-form
 
 This template should help get you started developing with Vue 3 in Vite.
@@ -38,37 +96,3 @@ npm run build
 npm run test:unit
 ```
 
-### Development Notes -- Cory Hanson ###
-
-Node 20 LTS
-Vue 3.4x
-Configured to use: Vite, Pinia, and Vitest
-
-Using TypeScript.
-Adding SCSS pre-processor.
-
-
-The Plan:
-
-Form 
-- name
-- phone
-- interest: Mountains || Oceans || Deserts
-- description
-- travel (methods?): Car, Bus, Train
-
-Form States:
-Unsubmitted | Submitted
-
-Components:
-- TravelInterestForm
-  - FormInput
-  - FormTextArea
-  - FormSelect
-  - FormCheckBoxes
-
-Services:
-- formConfigService -- Retrieve formConfig.json
-
-Store:
-- useFormStore -- based on formConfig
