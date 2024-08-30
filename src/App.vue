@@ -13,24 +13,14 @@ import TravelInterestForm from './components/TravelInterestForm.vue';
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-}
-
 .logo {
   display: block;
-  margin: 0 auto 2rem;
-  /* Transition over .3 seconds size change */
+  margin: 0 auto 1rem;
   transition: width 0.8s, height 0.8s;
 }
 
 @media (min-width: 1024px) {
-  header {
-    /* display: flex;
-    place-items: center;
-   */
-  }
-
+ 
   .logo {
     width: 200px;
     height: 200px;

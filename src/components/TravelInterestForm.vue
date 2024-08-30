@@ -32,17 +32,18 @@
       <button :disabled="!isReadyToSubmit" class="button" type="submit">{{ formConfig?.label || 'Submit' }}</button>
     </form>
   </template>
-  <div v-if="isSubmitted">
-    <h2>has been submitted successfully!</h2>
-  </div>
-  <div class="profile-card">
-    <h3>Draft Profile Data</h3>
-    <ul>
-      <li v-for="(value, key) in formData" :key="key">
-        {{ key }}: {{ value }}
-      </li>
-    </ul>
-  </div>
+  <template v-if="isSubmitted">
+    <div><h2>..has been submitted successfully!</h2></div>
+    <div class="profile-card">
+      <h3>Travel Profile Card</h3>
+      <ul>
+        <li v-for="field in formFields" :key="field.name" class="fields">
+          <p>{{ field.label }}:</p>
+          <p>{{ formatValue(formData[field.name]) }}</p>
+        </li>
+      </ul>
+    </div>
+  </template>
 </div>
 </template>
 
@@ -99,6 +100,15 @@ export default defineComponent({
       formStore.submitForm();
     };
 
+    // Convert incoming values to a friendly string
+    const formatValue = (value: any): string => {
+      if (Array.isArray(value)) {
+        return value.join(', ');
+      } else {
+        return value.toString();
+      }
+    };
+
     return {
       formConfig,
       formFields,
@@ -106,8 +116,9 @@ export default defineComponent({
       components,
       getComponent,
       updateFieldValue,
-      isReadyToSubmit,
+      formatValue,
       handleSubmit,
+      isReadyToSubmit,
       isSubmitted
     };
   },
@@ -136,6 +147,7 @@ ul {
   margin: 20px;
   min-width: 400px;
 
+
   .profile-card {
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -144,6 +156,34 @@ ul {
     width: 80%;
     min-width: 400px;
     max-width: 90%;
+    background-color: rgb(66, 140, 167);
+
+    h3 {
+      margin-bottom: 12px;
+      font-weight: bold;
+    }
+
+    .fields {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      background-color: rgba(48, 106, 127, 0.568);
+      
+      p {
+        border-radius: 5px;
+        padding: 0.5rem;
+
+
+      }
+
+      p:first-child {
+        font-size: small;
+      }
+
+      p:last-child {
+        font-weight: bold;
+      }
+    }
   }
 
   form {
