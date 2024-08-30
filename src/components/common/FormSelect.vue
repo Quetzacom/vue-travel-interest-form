@@ -9,7 +9,7 @@
       class="select-container field-select"
       @click="toggleDropdown"
       @keydown="handleKeyPress"
-      :aria-expanded="isOpen.toString()"
+      :aria-expanded="isOpen"
       role="combobox"
       aria-haspopup="listbox"
       :aria-labelledby="`${name}-label`"
@@ -36,7 +36,7 @@
         @blur="handleBlur"
         role="option"
         :aria-selected="option === selectedOption"
-        :tabindex="index === focusedIndex.value ? '0' : '-1'"
+        :tabindex="index === focusedIndex ? '0' : '-1'"
         @focus="focusedIndex = index"
         @mousedown.prevent="focusedIndex = index"
       >
